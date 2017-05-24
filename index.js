@@ -27,7 +27,6 @@ router.get('/book/:bookid/:chapterid', function (req, res, next){
         }
     })
 })
-
 app.use('/', router)
 
 app.listen(port, function(){
