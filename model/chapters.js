@@ -5,7 +5,7 @@ const chapterSchema = new Schema({
     bookId: Number,
     bookName: String,
     chapter: Number,
-    content: Array
+    contents: Array
 })
 
 const Chapters = mongoose.model('chapters', chapterSchema)
