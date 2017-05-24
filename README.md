@@ -16,8 +16,8 @@ npm start
 
 > GET /book/:book-id/:chapter-id
 
-1. **:book-id** is mean ordinal number of books in the bible. for example, the id of genesis will be 1, Matthew will be 40 by order.
-2. **:chapter-id** is chapter number.
+1. **:book-id** is mean a ordinal number of books in the bible. for example, the id of genesis will be 1, Matthew will be 40 by order.
+2. **:chapter-id** is a chapter number.
 
 ``` bash
 Response
