@@ -33,4 +33,3 @@ app.listen(port, function(){
     console.log(`Starting Lawa Bible API Service on port ${port}`)
 })
 
-console.log("hello, world!")
