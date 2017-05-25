@@ -14,7 +14,43 @@ npm start
 
 ## API Usage
 
-> GET /book/:book-id/:chapter-id
+
+> GET api/books
+
+This endpoint will retrieve the basic information of each book of lawa bible, such as acronym of the book, amount of chapters in each book.
+
+``` bash
+[
+    {
+        _id: 1,
+        bookName: "GEN",
+        chapters: 50
+    },
+    {
+        _id: 2,
+        bookName: "EXO",
+        chapters: 40
+    },
+    {
+        _id: 3,
+        bookName: "LEV",
+        chapters: 27
+    },
+    {
+        _id: 4,
+        bookName: "NUM",
+        chapters: 36
+    },
+    {
+        _id: 5,
+        bookName: "DEU",
+        chapters: 34
+    },
+    ...
+]
+```
+
+> GET api/book/:book-id/:chapter-id
 
 1. **:book-id** is mean a ordinal number of books in the bible. for example, the id of genesis will be 1, Matthew will be 40 by order.
 2. **:chapter-id** is a chapter number.

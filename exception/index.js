@@ -1,6 +1,6 @@
 const NotFound = {
     "httpStatus": 404,
-    "Messages": "Not Found"
+    "messages": "Not Found"
 }
 
 export default {

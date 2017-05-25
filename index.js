@@ -2,9 +2,10 @@ import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import exception from './exception'
-import Chapters from './model/chapters'
+import { Chapters } from './model'
 
 mongoose.connect('mongodb://localhost/lawabible')
+
 const app = express()
 const router = express.Router()
 const port = 8080;
@@ -18,15 +19,26 @@ router.route('/', function (req, res, next) {
     })
 });
 
-router.get('/book/:bookid/:chapterid', function (req, res, next){
+router.get('/api/book/:bookid/:chapterid', function (req, res, next){
     Chapters.find({"bookId": req.params.bookid, "chapter": req.params.chapterid}, (err, chapter) => {
         if(chapter.length == 0){
-            res.json(exception.NotFound)
+            res.status(404).json(exception.NotFound)
         }else{
             res.json(chapter[0])
         }
     })
 })
+
+router.get('/api/books', function(req, res, next){
+    Chapters.aggregate([{$project: {"bookId":"$bookId", "bookName": "$bookName"}}, {$group: {_id:"$bookId", "bookName": {"$first": "$bookName"}, chapters: {$sum: 1}}}, {$sort: { _id: 1}}], (err, result) => {
+        if(!err){
+            res.json(result)
+        }
+    })
+
+})
+
+
 app.use('/', router)
 
 app.listen(port, function(){
