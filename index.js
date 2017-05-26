@@ -2,7 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import exception from './exception'
-import { Chapters } from './model'
+import { Chapters } from './models'
 
 mongoose.connect('mongodb://localhost/lawabible')
 
@@ -13,7 +13,7 @@ const port = 8080;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-router.route('/', function (req, res, next) {
+router.all('/', function (req, res, next) {
     res.json({
         "messages": "Welcome to Lawa Bible API Service. Please contact m.me/madooding if you want a document of API using."
     })
@@ -30,7 +30,7 @@ router.get('/api/book/:bookid/:chapterid', function (req, res, next){
 })
 
 router.get('/api/books', function(req, res, next){
-    Chapters.aggregate([{$project: {"bookId":"$bookId", "bookName": "$bookName"}}, {$group: {_id:"$bookId", "bookName": {"$first": "$bookName"}, chapters: {$sum: 1}}}, {$sort: { _id: 1}}], (err, result) => {
+    Chapters.aggregate([{$project: {"bookId":"$bookId", "bookName": "$bookName", "firstChapter":"$chapter"}}, {$group: {_id:"$bookId", "bookName": {"$first": "$bookName"}, chapters: {$sum: 1}, "firstChapter": {"$first": "$$ROOT.firstChapter"}}}, {$sort: { _id: 1}}], (err, result) => {
         if(!err){
             res.json(result)
         }
