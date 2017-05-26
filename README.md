@@ -10,6 +10,9 @@ npm install
 # serve with nodemon at localhost:8080
 npm start
 
+# build for production
+npm run build
+
 ```
 
 ## API Usage
