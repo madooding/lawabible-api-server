@@ -4,7 +4,9 @@ import bodyParser from 'body-parser'
 import exception from './exception'
 import { Chapters } from './models'
 
-mongoose.connect('mongodb://localhost/lawabible')
+const hostname = 'mongodb://localhost/lawabible'
+// mongoose.connect(hostname)
+
 
 const app = express()
 const router = express.Router()
@@ -12,6 +14,12 @@ const port = 8080;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use((req, res, next)=>{
+    if(req._parsedUrl.path.split('/')[1] == 'api' && req._parsedUrl.path.split('/').length > 2)
+        mongoose.connect(hostname)
+    next()
+})
 
 router.all('/', function (req, res, next) {
     res.json({
@@ -26,6 +34,7 @@ router.get('/api/book/:bookid/:chapterid', function (req, res, next){
         }else{
             res.json(chapter[0])
         }
+        next()
     })
 })
 
@@ -34,12 +43,15 @@ router.get('/api/books', function(req, res, next){
         if(!err){
             res.json(result)
         }
+        next()
     })
-
 })
 
-
 app.use('/', router)
+
+app.use((req, res, next) => {
+    mongoose.disconnect()
+})
 
 app.listen(port, function(){
     console.log(`Starting Lawa Bible API Service on port ${port}`)

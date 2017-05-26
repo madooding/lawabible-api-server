@@ -17,34 +17,39 @@ npm start
 
 > GET api/books
 
-This endpoint will retrieve the basic information of each book of lawa bible, such as acronym of the book, amount of chapters in each book.
+This endpoint will retrieve the basic information of each book of lawa bible, such as acronym of the book, amount of chapters in each book, the ordinal number of the first chapter of each book.
 
 ``` bash
 [
     {
         _id: 1,
         bookName: "GEN",
-        chapters: 50
+        chapters: 50,
+        firstChapter: 1
     },
     {
         _id: 2,
         bookName: "EXO",
-        chapters: 40
+        chapters: 40,
+        firstChapter: 1
     },
     {
         _id: 3,
         bookName: "LEV",
-        chapters: 27
+        chapters: 27,
+        firstChapter: 1
     },
     {
         _id: 4,
         bookName: "NUM",
-        chapters: 36
+        chapters: 36,
+        firstChapter: 1
     },
     {
         _id: 5,
         bookName: "DEU",
-        chapters: 34
+        chapters: 34,
+        firstChapter: 1
     },
     ...
 ]
