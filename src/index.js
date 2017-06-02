@@ -1,6 +1,8 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
+import compression from 'compression'
+import morgan from 'morgan'
 import exception from './exception'
 import { Chapters } from './models'
 
@@ -14,6 +16,8 @@ const port = 8080;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(compression())
+app.use(morgan('combined'))
 
 app.use((req, res, next)=>{
     if(req._parsedUrl.path.split('/')[1] == 'api' && req._parsedUrl.path.split('/').length > 2)
