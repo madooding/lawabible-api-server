@@ -39,7 +39,7 @@ router.get('/api/book/:bookid/:chapterid', function (req, res, next){
 })
 
 router.get('/api/books', function(req, res, next){
-    Chapters.aggregate([{$project: {"bookId":"$bookId", "bookName": "$bookName", "bookNameTH": "$bookNameTH", "bookNameLW": "$bookNameLW", "firstChapter":"$chapter"}}, {$group: {_id:"$bookId", "bookName": {"$first": "$bookName"}, "bookNameTH": {"$first": "$bookNameTH"}, "bookNameLW": {"$first": "$bookNameLW"}, chapters: {$sum: 1}, "firstChapter": {"$first": "$$ROOT.firstChapter"}}}, {$sort: { _id: 1}}], (err, result) => {
+    Chapters.aggregate([{$project: {"bookId":"$bookId", "bookName": "$bookName", "bookNameTH": "$bookNameTH", "bookNameLW": "$bookNameLW", "firstChapter":"$chapter"}}, {$group: {_id:"$bookId", "bookName": {"$first": "$bookName"}, "bookNameTH": {"$first": "$bookNameTH"}, "bookNameLW": {"$first": "$bookNameLW "}, chapters: {$sum: 1}, "firstChapter": {"$first": "$$ROOT.firstChapter"}}}, {$sort: { _id: 1}}], (err, result) => {
         if(!err){
             res.json(result)
         }
