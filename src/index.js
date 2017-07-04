@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import morgan from 'morgan'
+import cors from 'cors'
 import exception from './exception'
 import { Chapters } from './models'
 
@@ -12,8 +13,9 @@ const hostname = 'mongodb://localhost/lawabible'
 
 const app = express()
 const router = express.Router()
-const port = 8080;
+const port = 9000;
 
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(compression())
@@ -43,10 +45,28 @@ router.get('/api/book/:bookid/:chapterid', function (req, res, next){
 })
 
 router.get('/api/books', function(req, res, next){
-    Chapters.aggregate([{$project: {"bookId":"$bookId", "bookName": "$bookName", "bookNameTH": "$bookNameTH", "bookNameLW": "$bookNameLW", "firstChapter":"$chapter"}}, {$group: {_id:"$bookId", "bookName": {"$first": "$bookName"}, "bookNameTH": {"$first": "$bookNameTH"}, "bookNameLW": {"$first": "$bookNameLW "}, chapters: {$sum: 1}, "firstChapter": {"$first": "$$ROOT.firstChapter"}}}, {$sort: { _id: 1}}], (err, result) => {
-        if(!err){
-            res.json(result)
+    Chapters.aggregate([
+        {
+            $sort: {
+                "bookId": 1,
+                "chapter": 1
+            }
+        },
+        { 
+            $group: {
+                _id: '$bookId',
+                bookName: { '$first': '$bookName' },
+                bookNameTH: { '$first': '$bookNameTH' },
+                bookNameLW: { '$first': '$bookNameLW' },
+                chapters: { $sum: 1 },
+                firstChapter: { '$first': '$chapter' }
+            }
         }
+    ])
+    
+    .sort({ _id: 1 })
+    .exec((err, books) => {
+        res.json(books)
         next()
     })
 })
