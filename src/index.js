@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import compression from 'compression'
 import morgan from 'morgan'
 import cors from 'cors'
+import fs from 'fs'
 import exception from './exception'
 import { Chapters } from './models'
 
@@ -27,11 +28,14 @@ app.use((req, res, next)=>{
     next()
 })
 
-router.all('/', function (req, res, next) {
-    res.json({
-        "messages": "Welcome to Lawa Bible API Service. Please contact m.me/madooding if you want a document of API using."
-    })
-});
+app.use(express.static('src/static'))
+
+
+router.get('/', function(req, res, next){
+    res.sendfile('src/static/index.html')
+    next()
+})
+
 
 router.get('/api/book/:bookid/:chapterid', function (req, res, next){
     Chapters.find({"bookId": req.params.bookid, "chapter": req.params.chapterid}, (err, chapter) => {
@@ -40,7 +44,6 @@ router.get('/api/book/:bookid/:chapterid', function (req, res, next){
         }else{
             res.json(chapter[0])
         }
-        next()
     })
 })
 
@@ -67,11 +70,20 @@ router.get('/api/books', function(req, res, next){
     .sort({ _id: 1 })
     .exec((err, books) => {
         res.json(books)
-        next()
     })
 })
 
+router.get('*', function(req, res, next) {
+    let splitedUrl = req.url.split('/')
+    if(splitedUrl.pop() == 'service-worker.js'){
+        res.setHeader('Content-Type', 'application/javascript')
+    }
+    res.sendFile(__dirname+'/static/index.html')
+    next()
+})
+
 app.use('/', router)
+
 
 app.use((req, res, next) => {
     mongoose.disconnect()
