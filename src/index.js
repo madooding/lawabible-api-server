@@ -8,7 +8,7 @@ import fs from 'fs'
 import exception from './exception'
 import { Chapters } from './models'
 
-const hostname = 'mongodb://database/lawabible'
+const hostname = 'mongodb://localhost/lawabible'
 // mongoose.connect(hostname)
 
 
