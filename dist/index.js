@@ -36,7 +36,7 @@ var _models = require('./models');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var hostname = 'mongodb://localhost/lawabible';
+var hostname = 'mongodb://database/lawabible';
 // mongoose.connect(hostname)
 
 
