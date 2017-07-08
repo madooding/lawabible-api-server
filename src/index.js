@@ -28,11 +28,11 @@ app.use((req, res, next)=>{
     next()
 })
 
-app.use(express.static('src/static'))
+app.use(express.static(__dirname + '/static'))
 
 
 router.get('/', function(req, res, next){
-    res.sendfile('src/static/index.html')
+    res.sendfile(__dirname + '/static/index.html')
     next()
 })
 
