@@ -28,6 +28,10 @@ var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
 
+var _mime = require('mime');
+
+var _mime2 = _interopRequireDefault(_mime);
+
 var _exception = require('./exception');
 
 var _exception2 = _interopRequireDefault(_exception);
@@ -92,10 +96,31 @@ router.get('/api/books', function (req, res, next) {
     });
 });
 
+router.get(/index.html$/, function (req, res, next) {
+    res.sendFile(__dirname + '/static/index.html');
+});
+
+router.get(/static/, function (req, res, next) {
+    var pathname = req._parsedUrl.pathname;
+    var localPath = __dirname + '/static' + pathname.substring(pathname.search('/static'));
+    _fs2.default.readFile(localPath, function (err, data) {
+        if (err) res.status(404).json({
+            error: {
+                messages: 'File not found!'
+            }
+        });else {
+            var type = _mime2.default.lookup(localPath);
+            res.setHeader('Content-Type', type);
+            res.sendFile(localPath);
+        }
+    });
+});
+
 router.get('*', function (req, res, next) {
     var splitedUrl = req.url.split('/');
     if (splitedUrl.pop() == 'service-worker.js') {
         res.setHeader('Content-Type', 'application/javascript');
+        res.sendFile(__dirname + '/static/service-worker.js');
     }
     res.sendFile(__dirname + '/static/index.html');
     next();

@@ -5,10 +5,11 @@ import compression from 'compression'
 import morgan from 'morgan'
 import cors from 'cors'
 import fs from 'fs'
+import mime from 'mime'
 import exception from './exception'
 import { Chapters } from './models'
 
-const hostname = 'mongodb://localhost/lawabible'
+const hostname = 'mongodb://database/lawabible'
 // mongoose.connect(hostname)
 
 
@@ -73,10 +74,32 @@ router.get('/api/books', function(req, res, next){
     })
 })
 
+router.get(/index.html$/, function(req, res, next) {
+    res.sendFile(__dirname + '/static/index.html')
+})
+
+router.get(/static/, function(req, res, next){
+    let pathname = req._parsedUrl.pathname
+    let localPath = __dirname + '/static' +  pathname.substring(pathname.search('/static'))
+    fs.readFile(localPath, (err, data) => {
+        if(err) res.status(404).json({
+            error: {
+                messages: 'File not found!'
+            }
+        }) 
+        else {
+            let type = mime.lookup(localPath)
+            res.setHeader('Content-Type', type)
+            res.sendFile(localPath)
+        }
+    })
+})
+
 router.get('*', function(req, res, next) {
     let splitedUrl = req.url.split('/')
     if(splitedUrl.pop() == 'service-worker.js'){
         res.setHeader('Content-Type', 'application/javascript')
+        res.sendFile(__dirname + '/static/service-worker.js')
     }
     res.sendFile(__dirname+'/static/index.html')
     next()
