@@ -61,10 +61,11 @@ app.use(function (req, res, next) {
 
 app.use(_express2.default.static(__dirname + '/static'));
 
-router.get('/', function (req, res, next) {
-    res.sendfile(__dirname + '/static/index.html');
-    next();
-});
+// router.get('/', function(req, res, next){
+//     res.sendfile(__dirname + '/static/index.html')
+//     next()
+// })
+
 
 router.get('/api/book/:bookid/:chapterid', function (req, res, next) {
     _models.Chapters.find({ "bookId": req.params.bookid, "chapter": req.params.chapterid }, function (err, chapter) {
@@ -116,14 +117,9 @@ router.get(/static/, function (req, res, next) {
     });
 });
 
-router.get('*', function (req, res, next) {
-    var splitedUrl = req.url.split('/');
-    if (splitedUrl.pop() == 'service-worker.js') {
-        res.setHeader('Content-Type', 'application/javascript');
-        res.sendFile(__dirname + '/static/service-worker.js');
-    }
-    res.sendFile(__dirname + '/static/index.html');
-    next();
+router.get(/service-worker.js$/, function (req, res, next) {
+    res.sendFile(__dirname + '/static/service-worker.js');
+    res.setHeader('Content-Type', 'application/javascript');
 });
 
 app.use('/', router);
