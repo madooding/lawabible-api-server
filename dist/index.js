@@ -119,7 +119,12 @@ router.get(/static/, function (req, res, next) {
 
 router.get(/service-worker.js$/, function (req, res, next) {
     res.sendFile(__dirname + '/static/service-worker.js');
-    res.setHeader('Content-Type', 'application/javascript');
+    res.setHeader('Service-Worker-Allowed', '/');
+    res.setHeader('Content-Type', 'text/sw+javascript');
+});
+
+router.get('*', function (req, res, next) {
+    res.sendFile(__dirname + '/static/index.html');
 });
 
 app.use('/', router);
